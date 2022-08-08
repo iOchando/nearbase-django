@@ -8,11 +8,16 @@ from django.db.models.signals import post_save
 
 class Profile(models.Model):
     wallet=models.CharField(max_length=255,unique=True ,null=False,blank=False)
+    first_name=models.CharField(max_length=255,null=True, blank=True)
+    last_name=models.CharField(max_length=255,null=True, blank=True)
+    email=models.EmailField(max_length = 255,null=True, blank=True)
+    phone=models.CharField(max_length=255,null=True, blank=True)
+    avatar=models.ImageField(null=True, blank=True)
     def __str__(self):
         return self.wallet
 
 class Domain(models.Model):
-    #profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="Domain")
+    id_contract = models.PositiveIntegerField()
     profile = models.CharField(max_length= 255)
     domain = models.CharField(max_length= 255, unique=True)
     price = models.PositiveIntegerField()
@@ -25,36 +30,14 @@ class Domain(models.Model):
         #return "Nombre: %s, ID_dominio:%s"%(self.domain,self.id)
 
 class DomainCredentials(models.Model):
-    domain=models.OneToOneField(Domain,null=False,on_delete=models.CASCADE, primary_key=True)
+    id_contract = models.PositiveIntegerField(primary_key=True)
+    domain= models.CharField(max_length= 255, unique=True)
     seedPhrase = models.CharField(max_length= 255)
     secretKey = models.CharField(max_length= 255)
     publicKey = models.CharField(max_length= 255)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.domain.domain 
+        return self.domain 
         #return "Dominio: %s, ID_credential:%s"%(self.domain.domain,self.domain.id)
 
-class PurchasedDomain(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="profile")
-    domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name="Domain")
-    date_purchased = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.profile.wallet
-
-# class ProfileLibrary(models.Model):
-#     profile = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name="library")
-#     domains = models.ManyToManyField(Domain, blank=True)
-#     def __str__(self):
-#         return self.profile.wallet
-
-# def post_save_profile_receiver(sender, instance, created, **kwargs):
-#     if created:
-#         library=ProfileLibrary.objects.create(profile=instance)
-
-#         purchased_domains = PurchasedDomain.objects.filter(profile=instance)
-
-#         for purchased_domain in purchased_domains:
-#             library.domains.add(purchased_domain.domain)
-
-# post_save.connect(post_save_profile_receiver, sender=Profile)

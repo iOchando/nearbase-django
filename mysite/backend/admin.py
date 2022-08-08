@@ -3,8 +3,7 @@ from .models import *
 
 # Register your models here.
 
-admin.site.register(Domain)
+#admin.site.register(Domain)
 admin.site.register(DomainCredentials)
 admin.site.register(Profile)
-#admin.site.register(ProfileLibrary)
-admin.site.register(PurchasedDomain)
+#admin.site.register(PurchasedDomain)
